@@ -39,8 +39,8 @@ trayDetail.id='trays-category';
 trayDetail.hidden=true;
 trayDetail.innerHTML=`<button type="button" class="btn back-products" style="margin:0 0 18px">← All Products</button><h2 style="margin:0 0 22px">Trays</h2><div class="grid"><article class="card"><div class="product-photo"><img src="${traysProduct.photo}" alt="Deviled Egg Tray handcrafted by CMD Woodworking" loading="lazy"></div>${traysProduct.extraPhoto?`<div class="product-photo"><img src="${traysProduct.extraPhoto}" alt="Additional Deviled Egg Tray photo" loading="lazy"></div>`:''}<div class="card-body"><h3>${traysProduct.name}</h3><p>${traysProduct.description}</p><div class="price">${traysProduct.price}</div><button class="btn" onclick="addToCart(${traysIndex})">Add to Order</button></div></article></div>`;
 grid.parentElement.appendChild(trayDetail);
-function openTrays(){grid.hidden=true;trayDetail.hidden=false;history.replaceState(null,'','#trays');trayDetail.scrollIntoView({behavior:'smooth'});}
-function closeTrays(){trayDetail.hidden=true;grid.hidden=false;history.replaceState(null,'','#products');grid.scrollIntoView({behavior:'smooth'});}
+function openTrays(){grid.setAttribute('hidden','');trayDetail.removeAttribute('hidden');history.replaceState(null,'','#trays');trayDetail.scrollIntoView({behavior:'smooth'});}
+function closeTrays(){trayDetail.setAttribute('hidden','');grid.removeAttribute('hidden');history.replaceState(null,'','#products');grid.scrollIntoView({behavior:'smooth'});}
 trayCategory.querySelector('.open-trays').addEventListener('click',openTrays);
 trayCategory.querySelector('.product-photo').addEventListener('click',openTrays);
 trayCategory.querySelector('.product-photo').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openTrays();}});
@@ -54,6 +54,8 @@ function checkout(){document.getElementById('customerMessage').value='I would li
 document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDefault();sendEmail('CMD Woodworking order inquiry',`Name: ${document.getElementById('customerName').value}\nEmail: ${document.getElementById('customerEmail').value}\n\n${document.getElementById('customerMessage').value}`)})
 </script>
 <style>
+/* Ensure the inactive category/page never remains visible as a grid. */
+#productsGrid[hidden], #trays-category-detail[hidden], [hidden]{display:none !important}
 .product-photo img{cursor:zoom-in}
 #productLightbox{position:fixed;inset:0;z-index:9999;background:rgba(12,10,8,.94);display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px;box-sizing:border-box;color:white}
 #productLightbox.open{display:flex}
