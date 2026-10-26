@@ -25,7 +25,27 @@ const products=[
 ];
 const cart=[];
 document.getElementById('year').textContent=new Date().getFullYear();
-document.getElementById('productsGrid').innerHTML=products.map((p,i)=>`<article class="card">${p.photo ? `<div class="product-photo"><img src="${p.photo}" alt="${p.name} handcrafted by CMD Woodworking" loading="lazy"></div>` : `<div class="photo"><span>${p.icon}</span><small>Product photo coming soon</small></div>`}${p.extraPhoto ? `<div class="product-photo"><img src="${p.extraPhoto}" alt="Additional ${p.name} example handcrafted by CMD Woodworking" loading="lazy"></div>` : ''}<div class="card-body"><h3>${p.name}</h3><p>${p.description}</p><div class="price">${p.price}</div><button class="btn" onclick="addToCart(${i})">Add to Order</button></div></article>`).join('');
+// Product category: Trays contains Deviled Egg Tray. All other products remain on the main page.
+const traysIndex=products.findIndex(p=>p.name==='Deviled Egg Tray');
+const traysProduct=products[traysIndex];
+const trayCard=`<article class="card category-card"><div class="product-photo" role="button" tabindex="0" aria-label="Open Trays category"><img src="${traysProduct.photo}" alt="Trays category — Deviled Egg Tray" loading="lazy"></div><div class="card-body"><h3>Trays</h3><p>Explore our handcrafted serving trays.</p><button type="button" class="btn open-trays">View Trays</button></div></article>`;
+const regularProducts=products.map((p,i)=>({p,i})).filter(x=>x.i!==traysIndex);
+document.getElementById('productsGrid').innerHTML=trayCard+regularProducts.map(({p,i})=>`<article class="card">${p.photo ? `<div class="product-photo"><img src="${p.photo}" alt="${p.name} handcrafted by CMD Woodworking" loading="lazy"></div>` : `<div class="photo"><span>${p.icon}</span><small>Product photo coming soon</small></div>`}${p.extraPhoto ? `<div class="product-photo"><img src="${p.extraPhoto}" alt="Additional ${p.name} example handcrafted by CMD Woodworking" loading="lazy"></div>` : ''}<div class="card-body"><h3>${p.name}</h3><p>${p.description}</p><div class="price">${p.price}</div><button class="btn" onclick="addToCart(${i})">Add to Order</button></div></article>`).join('');
+// Show the tray product inside its category without changing the cart's product index.
+const grid=document.getElementById('productsGrid');
+const trayCategory=grid.querySelector('.category-card');
+const trayDetail=document.createElement('div');
+trayDetail.id='trays-category';
+trayDetail.hidden=true;
+trayDetail.innerHTML=`<button type="button" class="btn back-products" style="margin:0 0 18px">← All Products</button><h2 style="margin:0 0 22px">Trays</h2><div class="grid"><article class="card"><div class="product-photo"><img src="${traysProduct.photo}" alt="Deviled Egg Tray handcrafted by CMD Woodworking" loading="lazy"></div>${traysProduct.extraPhoto?`<div class="product-photo"><img src="${traysProduct.extraPhoto}" alt="Additional Deviled Egg Tray photo" loading="lazy"></div>`:''}<div class="card-body"><h3>${traysProduct.name}</h3><p>${traysProduct.description}</p><div class="price">${traysProduct.price}</div><button class="btn" onclick="addToCart(${traysIndex})">Add to Order</button></div></article></div>`;
+grid.parentElement.appendChild(trayDetail);
+function openTrays(){grid.hidden=true;trayDetail.hidden=false;history.replaceState(null,'','#trays');trayDetail.scrollIntoView({behavior:'smooth'});}
+function closeTrays(){trayDetail.hidden=true;grid.hidden=false;history.replaceState(null,'','#products');grid.scrollIntoView({behavior:'smooth'});}
+trayCategory.querySelector('.open-trays').addEventListener('click',openTrays);
+trayCategory.querySelector('.product-photo').addEventListener('click',openTrays);
+trayCategory.querySelector('.product-photo').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openTrays();}});
+trayDetail.querySelector('.back-products').addEventListener('click',closeTrays);
+if(location.hash==='#trays')openTrays();
 function addToCart(i){cart.push(products[i].name);updateCart()}
 function updateCart(){document.getElementById('cart').classList.toggle('hidden',cart.length===0);document.getElementById('count').textContent=cart.length;document.getElementById('cartItems').textContent=cart.join(' · ')}
 function clearCart(){cart.length=0;updateCart()}
@@ -62,14 +82,14 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  function display(){photo.src=photos[index].src;photo.alt=photos[index].alt||title.textContent;counter.textContent=(index+1)+' / '+photos.length;prev.disabled=next.disabled=photos.length<2;}
  function close(){box.classList.remove('open');photo.removeAttribute('src');document.body.style.overflow='';if(previousFocus)previousFocus.focus();}
  function move(n){index=(index+n+photos.length)%photos.length;display();}
- document.getElementById('productsGrid').addEventListener('click',function(event){
+ document.getElementById('products').addEventListener('click',function(event){
   const clicked=event.target.closest('.product-photo img');if(!clicked)return;
-  const card=clicked.closest('.card');if(!card)return;
+  const card=clicked.closest('.card');if(!card||card.classList.contains('category-card'))return;
   previousFocus=document.activeElement;
   const imgs=[...card.querySelectorAll('.product-photo img')];
   photos=imgs.map(img=>({src:img.src,alt:img.alt}));
-  const productIndex=[...card.parentElement.children].indexOf(card);
-  const product=typeof products!=='undefined'?products[productIndex]:null;
+  const productName=card.querySelector('h3')?.textContent;
+  const product=typeof products!=='undefined'?products.find(p=>p.name===productName):null;
   if(product&&Array.isArray(product.gallery))product.gallery.forEach(src=>photos.push({src,alt:product.name}));
   index=Math.max(0,imgs.indexOf(clicked));title.textContent=card.querySelector('h3')?.textContent||'Product photos';
   box.classList.add('open');document.body.style.overflow='hidden';display();box.querySelector('.gallery-close').focus();
