@@ -46,6 +46,34 @@ trayCategory.querySelector('.product-photo').addEventListener('click',openTrays)
 trayCategory.querySelector('.product-photo').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openTrays();}});
 trayDetail.querySelector('.back-products').addEventListener('click',closeTrays);
 if(location.hash==='#trays')openTrays();
+
+// Wooden Flags category: move the three existing flag cards into one category.
+// Moving (rather than copying) preserves their photos, descriptions, and cart buttons.
+const flagNames=['Large Wooden Wavey Flag','Medium Wooden Flag','XS Wooden Flag'];
+const flagCards=[...grid.querySelectorAll('.card')].filter(card=>flagNames.includes(card.querySelector('h3')?.textContent.trim()));
+if(flagCards.length===3){
+ const flagCategory=document.createElement('article');
+ flagCategory.className='card category-card flags-category-card';
+ const flagCover=flagCards[0].querySelector('.product-photo img');
+ flagCategory.innerHTML=`<div class="product-photo" role="button" tabindex="0" aria-label="Open Wooden Flags category"><img src="${flagCover ? flagCover.src : ''}" alt="Wooden Flags category" loading="lazy"></div><div class="card-body"><h3>Wooden Flags</h3><p>Explore our handcrafted wooden flags in three sizes.</p><button type="button" class="btn open-flags">View Wooden Flags</button></div>`;
+ const flagsDetail=document.createElement('div');
+ flagsDetail.id='flags-category';
+ flagsDetail.hidden=true;
+ flagsDetail.innerHTML='<button type="button" class="btn back-flags" style="margin:0 0 18px">← All Products</button><h2 style="margin:0 0 22px">Wooden Flags</h2><div class="grid"></div>';
+ const flagsGrid=flagsDetail.querySelector('.grid');
+ flagCards.forEach(card=>flagsGrid.appendChild(card));
+ grid.appendChild(flagCategory);
+ grid.parentElement.appendChild(flagsDetail);
+ function openFlags(){trayDetail.hidden=true;grid.hidden=true;flagsDetail.hidden=false;history.replaceState(null,'','#flags');flagsDetail.scrollIntoView({behavior:'smooth'});}
+ function closeFlags(){flagsDetail.hidden=true;grid.hidden=false;history.replaceState(null,'','#products');grid.scrollIntoView({behavior:'smooth'});}
+ flagCategory.querySelector('.open-flags').addEventListener('click',openFlags);
+ const cover=flagCategory.querySelector('.product-photo');
+ cover.addEventListener('click',openFlags);
+ cover.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openFlags();}});
+ flagsDetail.querySelector('.back-flags').addEventListener('click',closeFlags);
+ if(location.hash==='#flags')openFlags();
+}
+
 function addToCart(i){cart.push(products[i].name);updateCart()}
 function updateCart(){document.getElementById('cart').classList.toggle('hidden',cart.length===0);document.getElementById('count').textContent=cart.length;document.getElementById('cartItems').textContent=cart.join(' · ')}
 function clearCart(){cart.length=0;updateCart()}
