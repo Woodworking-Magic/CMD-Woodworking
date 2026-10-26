@@ -74,6 +74,19 @@ if(flagCards.length===3){
  if(location.hash==='#flags')openFlags();
 }
 
+
+// Main-page order: Wooden Flags, Trays, Custom Laser Engraving, then the rest.
+// Reorder existing cards only; do not duplicate products or change photos.
+const mainCards=[...grid.querySelectorAll(':scope > .card')];
+const flagsMain=mainCards.find(c=>c.classList.contains('flags-category-card'));
+const traysMain=mainCards.find(c=>c.classList.contains('category-card') && !c.classList.contains('flags-category-card'));
+const laserMain=mainCards.find(c=>c.querySelector('h3')?.textContent.trim()==='Custom Laser Engraving');
+if(flagsMain && traysMain && laserMain){
+ grid.prepend(flagsMain);
+ flagsMain.after(traysMain);
+ traysMain.after(laserMain);
+}
+
 function addToCart(i){cart.push(products[i].name);updateCart()}
 function updateCart(){document.getElementById('cart').classList.toggle('hidden',cart.length===0);document.getElementById('count').textContent=cart.length;document.getElementById('cartItems').textContent=cart.join(' · ')}
 function clearCart(){cart.length=0;updateCart()}
