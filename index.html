@@ -116,13 +116,13 @@ if(flagsMain && traysMain && laserMain){
    unique.forEach((src,i)=>{
       const img=document.createElement('img');img.src=src;img.alt='Custom laser engraving photo '+(i+1);
       img.loading='lazy';img.style.cssText='width:100%;height:260px;object-fit:contain;background:#f4eee5;border-radius:9px;cursor:zoom-in';
-      img.addEventListener('click',()=>{const viewer=window.open('','_blank');if(viewer){viewer.document.write('<title>Custom Laser Engraving</title><style>body{background:#21160f;display:grid;place-items:center;min-height:95vh;margin:0}img{max-width:98vw;max-height:95vh;object-fit:contain}</style><img src="'+src+'">');viewer.document.close();}});
+      img.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('cmd-open-product-gallery',{detail:{title:'Custom Laser Engraving',photos:unique,index:i}})));
       gallery.appendChild(img);
    });
    panel.append(back,title,gallery);grid.parentElement.appendChild(panel);
    function open(){grid.hidden=true;document.getElementById('trays-category')?.setAttribute('hidden','');document.getElementById('flags-category')?.setAttribute('hidden','');panel.hidden=false;panel.scrollIntoView({behavior:'smooth'});}
    function close(){panel.hidden=true;grid.hidden=false;grid.scrollIntoView({behavior:'smooth'});}
-   btn.addEventListener('click',open);card.querySelector('.product-photo')?.addEventListener('click',open);
+   btn.addEventListener('click',open);
    back.addEventListener('click',close);
  })();
 function addToCart(i){cart.push(products[i].name);updateCart()}
@@ -137,7 +137,7 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
 #productsGrid[hidden], #trays-category-detail[hidden], [hidden]{display:none !important}
 .product-photo img{cursor:zoom-in}
 #productLightbox{position:fixed;inset:0;z-index:9999;background:rgba(12,10,8,.94);display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px;box-sizing:border-box;color:white}
-#productLightbox.open{display:flex}
+#productLightbox.open{display:flex;touch-action:pan-y}
 #productLightbox .gallery-image{max-width:min(94vw,1200px);max-height:76vh;object-fit:contain;border-radius:5px}
 #productLightbox button{border:0;border-radius:8px;background:#fff;color:#222;padding:10px 15px;font-size:20px;cursor:pointer}
 #productLightbox .gallery-close{position:absolute;right:18px;top:16px}
@@ -170,9 +170,19 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
   const imgs=[...card.querySelectorAll('.product-photo img')];
   photos=imgs.map(img=>({src:img.src,alt:img.alt}));
   const productName=card.querySelector('h3')?.textContent;
-  const product=typeof products!=='undefined'?products.find(p=>p.name===productName):null;
-  if(product&&Array.isArray(product.gallery))product.gallery.forEach(src=>photos.push({src,alt:product.name}));
+  const product=typeof products!=='undefined'?products.find(p=>p.name===productName?.trim()):null;
+  if(product&&Array.isArray(product.gallery))product.gallery.forEach(src=>{if(!photos.some(p=>p.src===src))photos.push({src,alt:product.name});});
   index=Math.max(0,imgs.indexOf(clicked));title.textContent=card.querySelector('h3')?.textContent||'Product photos';
+  box.classList.add('open');document.body.style.overflow='hidden';display();box.querySelector('.gallery-close').focus();
+ });
+ // Open any product's full photo set, including photos shown in category galleries.
+ document.addEventListener('cmd-open-product-gallery',e=>{
+  const d=e.detail||{};
+  photos=[...new Set((d.photos||[]).filter(Boolean))].map(src=>({src,alt:d.title||'Product photo'}));
+  if(!photos.length)return;
+  previousFocus=document.activeElement;
+  title.textContent=d.title||'Product photos';
+  index=Math.min(Math.max(Number(d.index)||0,0),photos.length-1);
   box.classList.add('open');document.body.style.overflow='hidden';display();box.querySelector('.gallery-close').focus();
  });
  box.querySelector('.gallery-close').addEventListener('click',close);
