@@ -103,7 +103,7 @@ if(flagsMain && traysMain && laserMain){
    const pictures=[product.photo,...(product.gallery||[])].filter(Boolean);
    const unique=[...new Set(pictures)];
    const btn=document.createElement('button');
-   btn.className='btn';btn.type='button';btn.textContent='View Photos ('+unique.length+')';
+   btn.className='btn';btn.type='button';btn.textContent=(card.textContent.includes('Custom Laser Engraving') || card.textContent.includes('Custom Engraving')) ? 'View Custom Engraving' : 'View Photos ('+unique.length+')';
    btn.style.cssText='width:100%;margin-top:12px';
    const body=card.querySelector('.card-body');
    const order=body.querySelector('button');
