@@ -327,7 +327,7 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
   img.addEventListener('click',e=>{e.stopPropagation();document.dispatchEvent(new CustomEvent('cmd-open-product-gallery',{detail:{title:'Custom Laser Engraving',photos,index}}));});
   host.replaceChildren(root);show();
  }
- makeSwiper(card.querySelector('.product-photo'));
+ // Keep the main product card as a single photo; swipe controls belong only in the detailed gallery.
  // The separate View Custom Engraving page also displays one image at a time.
  const panel=document.getElementById('laser-photo-gallery');
  if(panel)makeSwiper(panel.querySelector('.grid'));
