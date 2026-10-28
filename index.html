@@ -82,22 +82,6 @@ if(flagCards.length===3){
 }
 
 
-// Pop Top Sign: clearly visible photo gallery button with two real photos.
-(function(){
- const p=products.find(x=>x.name==='Pop Top Sign');
- const card=[...document.querySelectorAll('#productsGrid .card')].find(x=>x.querySelector('h3')?.textContent.trim()==='Pop Top Sign');
- if(!p||!card)return;
- const body=card.querySelector('.card-body');
- const order=body.querySelector('button');
- const view=document.createElement('button');
- view.className='btn';view.type='button';view.textContent='View Pop Top Signs';
- view.style.cssText='width:100%;margin-top:12px';
- body.insertBefore(view,order);
- view.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('cmd-open-product-gallery',{
-   detail:{title:'Pop Top Sign',photos:[p.photo,...(p.gallery||[])],index:0}
- })));
-})();
-
 // Main-page order: Wooden Flags, Trays, Custom Laser Engraving, then the rest.
 // Reorder existing cards only; do not duplicate products or change photos.
 const mainCards=[...grid.querySelectorAll(':scope > .card')];
@@ -346,7 +330,16 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  const cardPhotos=card.querySelectorAll(':scope > .product-photo');
  cardPhotos.forEach((el,i)=>{if(i>0)el.remove()});
  const body=card.querySelector('.card-body');
- body.querySelectorAll('button').forEach(b=>{if(b.textContent.trim()==='Add to Order')b.remove()});
+ // Remove any old Pop Top Sign view/order buttons before adding one working button.
+ body.querySelectorAll('button').forEach(b=>{
+   const label=b.textContent.trim().toLowerCase();
+   if(label.includes('view pop top') || label==='view' || label==='add to order') b.remove();
+ });
+ const viewButton=document.createElement('button');
+ viewButton.type='button';viewButton.className='btn';
+ viewButton.textContent='View Pop Top Signs';
+ viewButton.style.cssText='width:100%;margin-top:12px';
+ body.appendChild(viewButton);
  const price=body.querySelector('.price');if(price)price.remove();
  const btn=document.createElement('button');btn.className='btn';btn.type='button';btn.textContent='View Custom Signs';btn.style.cssText='width:100%;margin-top:12px';body.appendChild(btn);
  const panel=document.createElement('div');panel.id='custom-signs-gallery';panel.hidden=true;
@@ -411,6 +404,7 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  root.addEventListener('touchend',e=>{if(startX===null)return;const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>40&&photos.length>1)move(dx<0?1:-1);startX=null},{passive:true});
  img.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('cmd-open-product-gallery',{detail:{title:'Pop Top Sign',photos,index}})));
 
+ viewButton.addEventListener('click',()=>{grid.hidden=true;panel.hidden=false;panel.scrollIntoView({behavior:'smooth'});});
  back.addEventListener('click',()=>{panel.hidden=true;grid.hidden=false;grid.scrollIntoView({behavior:'smooth'});});
  show();
 })();
