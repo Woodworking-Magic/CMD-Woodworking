@@ -357,16 +357,11 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  const cardPhotos=card.querySelectorAll(':scope > .product-photo');
  cardPhotos.forEach((el,i)=>{if(i>0)el.remove()});
  const body=card.querySelector('.card-body');
- // Remove any old Pop Top Sign view/order buttons before adding one working button.
+ // Custom Signs should only have its own View button.
  body.querySelectorAll('button').forEach(b=>{
    const label=b.textContent.trim().toLowerCase();
    if(label.includes('view pop top') || label==='view' || label==='add to order') b.remove();
  });
- const viewButton=document.createElement('button');
- viewButton.type='button';viewButton.className='btn';
- viewButton.textContent='View Pop Top Signs';
- viewButton.style.cssText='width:100%;margin-top:12px';
- body.appendChild(viewButton);
  const price=body.querySelector('.price');if(price)price.remove();
  const btn=document.createElement('button');btn.className='btn';btn.type='button';btn.textContent='View Custom Signs';btn.style.cssText='width:100%;margin-top:12px';body.appendChild(btn);
  const panel=document.createElement('div');panel.id='custom-signs-gallery';panel.hidden=true;
@@ -409,6 +404,15 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  if(!body)return;
  body.querySelectorAll('button').forEach(b=>{if(b.textContent.trim()==='Add to Order')b.remove()});
  body.querySelectorAll('.price').forEach(el=>el.remove());
+ // Keep exactly one Pop Top Signs button inside the correct product card.
+ body.querySelectorAll('button').forEach(b=>{
+   if(/view pop top signs?/i.test(b.textContent.trim())) b.remove();
+ });
+ const viewButton=document.createElement('button');
+ viewButton.type='button';viewButton.className='btn';
+ viewButton.textContent='View Pop Top Signs';
+ viewButton.style.cssText='width:100%;margin-top:12px';
+ body.appendChild(viewButton);
 
  const panel=document.createElement('div');panel.id='pop-top-sign-gallery';panel.hidden=true;
  panel.style.cssText='background:white;border-radius:12px;padding:22px;box-shadow:0 5px 18px #2d241e18';
