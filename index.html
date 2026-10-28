@@ -334,4 +334,44 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  if(panel)makeSwiper(panel.querySelector('.grid'));
 })();
 </script>
+<script>
+// Custom Signs uses the same main-card / detailed swipe-gallery pattern as Custom Laser Engraving.
+(function(){
+ const product=products.find(p=>p.name==='Custom Signs');
+ const grid=document.getElementById('productsGrid');
+ const card=[...grid.querySelectorAll(':scope > .card')].find(c=>c.querySelector('h3')?.textContent.trim()==='Custom Signs');
+ if(!product||!card)return;
+ const photos=[...new Set([product.photo,product.extraPhoto,...(product.gallery||[])].filter(Boolean))];
+ // The home page shows only the cover photo and a View button.
+ const cardPhotos=card.querySelectorAll(':scope > .product-photo');
+ cardPhotos.forEach((el,i)=>{if(i>0)el.remove()});
+ const body=card.querySelector('.card-body');
+ body.querySelectorAll('button').forEach(b=>{if(b.textContent.trim()==='Add to Order')b.remove()});
+ const price=body.querySelector('.price');if(price)price.remove();
+ const btn=document.createElement('button');btn.className='btn';btn.type='button';btn.textContent='View Custom Signs';btn.style.cssText='width:100%;margin-top:12px';body.appendChild(btn);
+ const panel=document.createElement('div');panel.id='custom-signs-gallery';panel.hidden=true;
+ panel.style.cssText='background:white;border-radius:12px;padding:22px;box-shadow:0 5px 18px #2d241e18';
+ const back=document.createElement('button');back.type='button';back.className='btn';back.textContent='← All Products';
+ const title=document.createElement('h2');title.textContent='Custom Signs Photos';title.style.margin='20px 0';
+ const root=document.createElement('div');root.className='laser-swipe-gallery';
+ const img=document.createElement('img');img.loading='lazy';
+ const controls=document.createElement('div');controls.className='laser-swipe-controls';
+ const prev=document.createElement('button');prev.type='button';prev.textContent='❮';prev.setAttribute('aria-label','Previous custom sign photo');
+ const counter=document.createElement('span');counter.className='laser-swipe-counter';counter.setAttribute('aria-live','polite');
+ const next=document.createElement('button');next.type='button';next.textContent='❯';next.setAttribute('aria-label','Next custom sign photo');
+ const hint=document.createElement('div');hint.className='laser-swipe-hint';hint.textContent='Swipe to see more photos';
+ controls.append(prev,counter,next);root.append(img,controls,hint);panel.append(back,title,root);
+ grid.parentElement.appendChild(panel);
+ let index=0,startX=null;
+ function show(){img.src=photos[index];img.alt='Custom Signs photo '+(index+1)+' of '+photos.length;counter.textContent=(index+1)+' / '+photos.length;controls.hidden=photos.length<2;hint.hidden=photos.length<2;}
+ function move(step){index=(index+step+photos.length)%photos.length;show()}
+ prev.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
+ root.addEventListener('touchstart',e=>{startX=e.touches[0].clientX},{passive:true});
+ root.addEventListener('touchend',e=>{if(startX===null)return;const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>40&&photos.length>1)move(dx<0?1:-1);startX=null},{passive:true});
+ img.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('cmd-open-product-gallery',{detail:{title:'Custom Signs',photos,index}})));
+ btn.addEventListener('click',()=>{document.getElementById('laser-photo-gallery')?.setAttribute('hidden','');document.getElementById('trays-category')?.setAttribute('hidden','');document.getElementById('flags-category')?.setAttribute('hidden','');grid.hidden=true;panel.hidden=false;panel.scrollIntoView({behavior:'smooth'});});
+ back.addEventListener('click',()=>{panel.hidden=true;grid.hidden=false;grid.scrollIntoView({behavior:'smooth'});});
+ show();
+})();
+</script>
 </body></html>
