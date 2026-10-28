@@ -291,4 +291,46 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  show();
 })();
 </script>
+
+<style>
+.laser-swipe-gallery{touch-action:pan-y;text-align:center}
+.laser-swipe-gallery img{display:block;width:100%;height:270px;object-fit:contain;background:#f4eee5;border-radius:9px;cursor:zoom-in}
+.laser-swipe-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:10px}
+.laser-swipe-controls button{background:#43352a;color:white;border:0;border-radius:8px;padding:8px 16px;font-size:19px;cursor:pointer}
+.laser-swipe-counter{font-weight:600;min-width:60px}
+.laser-swipe-hint{font-size:12px;color:#665b51;margin-top:6px}
+</style>
+<script>
+(function(){
+ const product=products.find(p=>p.name==='Custom Laser Engraving');
+ const card=[...document.querySelectorAll('#productsGrid .card')].find(c=>c.querySelector('h3')?.textContent.trim()==='Custom Laser Engraving');
+ if(!product||!card)return;
+ const photos=[...new Set([product.photo,product.extraPhoto,...(product.gallery||[])].filter(Boolean))];
+ if(!photos.length)return;
+ function makeSwiper(host){
+  if(!host)return;
+  const root=document.createElement('div');root.className='laser-swipe-gallery';
+  const img=document.createElement('img');img.loading='lazy';
+  const controls=document.createElement('div');controls.className='laser-swipe-controls';
+  const prev=document.createElement('button');prev.type='button';prev.textContent='❮';prev.setAttribute('aria-label','Previous laser engraving photo');
+  const count=document.createElement('span');count.className='laser-swipe-counter';count.setAttribute('aria-live','polite');
+  const next=document.createElement('button');next.type='button';next.textContent='❯';next.setAttribute('aria-label','Next laser engraving photo');
+  const hint=document.createElement('div');hint.className='laser-swipe-hint';hint.textContent='Swipe to see more photos';
+  controls.append(prev,count,next);root.append(img,controls,hint);
+  let index=0,startX=null;
+  function show(){img.src=photos[index];img.alt='Custom Laser Engraving photo '+(index+1)+' of '+photos.length;count.textContent=(index+1)+' / '+photos.length;}
+  function move(step){index=(index+step+photos.length)%photos.length;show();}
+  prev.addEventListener('click',e=>{e.stopPropagation();move(-1)});
+  next.addEventListener('click',e=>{e.stopPropagation();move(1)});
+  root.addEventListener('touchstart',e=>{startX=e.touches[0].clientX},{passive:true});
+  root.addEventListener('touchend',e=>{if(startX===null)return;const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>40)move(dx<0?1:-1);startX=null},{passive:true});
+  img.addEventListener('click',e=>{e.stopPropagation();document.dispatchEvent(new CustomEvent('cmd-open-product-gallery',{detail:{title:'Custom Laser Engraving',photos,index}}));});
+  host.replaceChildren(root);show();
+ }
+ makeSwiper(card.querySelector('.product-photo'));
+ // The separate View Custom Engraving page also displays one image at a time.
+ const panel=document.getElementById('laser-photo-gallery');
+ if(panel)makeSwiper(panel.querySelector('.grid'));
+})();
+</script>
 </body></html>
