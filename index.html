@@ -389,7 +389,7 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  if(!body)return;
  body.querySelectorAll('button').forEach(b=>{if(b.textContent.trim()==='Add to Order')b.remove()});
  body.querySelectorAll('.price').forEach(el=>el.remove());
- const btn=document.createElement('button');btn.type='button';btn.className='btn';btn.textContent='View Pop Top Sign';btn.style.cssText='width:100%;margin-top:12px';body.appendChild(btn);
+
  const panel=document.createElement('div');panel.id='pop-top-sign-gallery';panel.hidden=true;
  panel.style.cssText='background:white;border-radius:12px;padding:22px;box-shadow:0 5px 18px #2d241e18';
  const back=document.createElement('button');back.type='button';back.className='btn';back.textContent='← All Products';
@@ -410,7 +410,7 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
  root.addEventListener('touchstart',e=>{startX=e.touches[0].clientX},{passive:true});
  root.addEventListener('touchend',e=>{if(startX===null)return;const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>40&&photos.length>1)move(dx<0?1:-1);startX=null},{passive:true});
  img.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('cmd-open-product-gallery',{detail:{title:'Pop Top Sign',photos,index}})));
- btn.addEventListener('click',()=>{document.getElementById('laser-photo-gallery')?.setAttribute('hidden','');document.getElementById('custom-signs-gallery')?.setAttribute('hidden','');document.getElementById('trays-category')?.setAttribute('hidden','');document.getElementById('flags-category')?.setAttribute('hidden','');grid.hidden=true;panel.hidden=false;panel.scrollIntoView({behavior:'smooth'});});
+
  back.addEventListener('click',()=>{panel.hidden=true;grid.hidden=false;grid.scrollIntoView({behavior:'smooth'});});
  show();
 })();
