@@ -123,7 +123,8 @@ if(flagsMain && traysMain && laserMain){
    btn.style.cssText='width:100%;margin-top:12px';
    const body=card.querySelector('.card-body');
    const order=body.querySelector('button');
-   body.insertBefore(btn,order);
+   if(order && order.textContent.trim()==='Add to Order') order.remove();
+   body.appendChild(btn);
    const panel=document.createElement('div');panel.id='laser-photo-gallery';panel.hidden=true;
    panel.style.cssText='grid-column:1/-1;background:white;border-radius:12px;padding:22px;box-shadow:0 5px 18px #2d241e18';
    const back=document.createElement('button');back.type='button';back.className='btn';back.textContent='← All Products';
