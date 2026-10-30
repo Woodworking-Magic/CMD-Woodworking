@@ -477,13 +477,14 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
 }
 @media (max-width: 767px) {
   #cmdMobileBack {
-    display:flex; align-items:center; justify-content:center; gap:7px;
+    display:none; align-items:center; justify-content:center; gap:7px;
     position:fixed; left:14px; top:calc(14px + env(safe-area-inset-top));
     z-index:2147483646; padding:12px 19px;
     border:2px solid #f0d7b4; border-radius:30px;
     background:#56331f; color:#fff; font:bold 16px Arial,sans-serif;
     box-shadow:0 3px 12px #0005; cursor:pointer;
   }
+  #cmdMobileBack.cmd-back-active { display:flex; }
   #cmdMobileBack:active { background:#78472c; }
 }
 </style>
@@ -491,6 +492,16 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
 <script>
 (function(){
   const button = document.getElementById('cmdMobileBack');
+  function updateBackVisibility(){
+    const gallery = document.getElementById('productLightbox');
+    const grid = document.getElementById('productsGrid');
+    const detailOpen = grid && grid.hidden;
+    const galleryOpen = gallery && gallery.classList.contains('open');
+    button.classList.toggle('cmd-back-active', !!(detailOpen || galleryOpen));
+  }
+  const observer = new MutationObserver(updateBackVisibility);
+  observer.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class','hidden']});
+  updateBackVisibility();
   button.addEventListener('click', function(){
     const gallery = document.getElementById('productLightbox');
     if (gallery && gallery.classList.contains('open')) {
@@ -501,6 +512,12 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
     if (openDialog) {
       const close = openDialog.querySelector('[aria-label*="Close"], .close, .gallery-close');
       if (close) { close.click(); return; }
+    }
+    const grid = document.getElementById('productsGrid');
+    if (grid && grid.hidden) {
+      const backButtons = [...document.querySelectorAll('.back-products')];
+      const visibleBack = backButtons.find(b => b.getClientRects().length > 0);
+      if (visibleBack) { visibleBack.click(); return; }
     }
     if (window.location.hash && window.location.hash !== '#products') {
       window.location.hash = 'products';
