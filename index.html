@@ -32,6 +32,78 @@ body > .hero {padding-top:18px;padding-bottom:30px;}
 <meta name="twitter:card" content="summary">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"CMD Woodworking","url":"https://woodworking-magic.github.io/CMD-Woodworking/","description":"CMD Woodworking creates handcrafted wooden flags, letter banks, trays, custom signs, laser engraving and personalized wooden gifts. Based in Alabama; contact us for custom orders.","email":"cmdwoodworking@yahoo.com","areaServed":[{"@type":"State","name":"Alabama"},{"@type":"Country","name":"United States"}]}</script>
 <style>.cmd-seo-visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+
+<style id="cmd-modern-rustic-refresh">
+/* CMD Woodworking: Modern Rustic visual refresh — styling only. */
+:root{
+  --brown:#34251d;
+  --gold:#c99955;
+  --cream:#fbf7f0;
+}
+html {scroll-behavior:smooth;}
+body{
+  background:linear-gradient(155deg,#f7efe3 0%,#ead9c4 50%,#f5eadb 100%);
+  color:#33271f;
+}
+body > header{
+  background:linear-gradient(100deg,#302019,#4b3225);
+  box-shadow:0 5px 18px rgba(44,28,18,.18);
+  border-bottom:2px solid rgba(201,153,85,.55);
+}
+body > header nav a{font-weight:600;transition:color .2s ease;}
+body > header nav a:hover,body > header nav a:focus-visible{color:#f0c990;}
+body > .hero{
+  background:linear-gradient(130deg,#2e211b 0%,#553a2a 52%,#38251c 100%);
+}
+.hero-logo{box-shadow:0 13px 30px rgba(16,10,7,.25);border-radius:16px;}
+section{max-width:1180px;}
+section h2{
+  color:#3d281d;
+  letter-spacing:.15px;
+}
+.intro{color:#6b5140;}
+.grid{gap:24px;}
+.card{
+  background:#fffdf9;
+  border:1px solid rgba(119,78,47,.12);
+  border-radius:17px;
+  box-shadow:0 8px 24px rgba(59,37,23,.10);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 13px 30px rgba(59,37,23,.16);
+}
+.product-photo{height:310px;background:#f0e8df;}
+[data-beauty-tray] .product-photo{background:#000;}
+.card-body{padding:22px;}
+.card h3{color:#38251b;font-size:1.2rem;}
+.card p{color:#665347;}
+.btn,.card button{
+  border-radius:9px;
+  transition:filter .2s ease,transform .2s ease;
+}
+.btn:hover,.card button:hover{filter:brightness(.95);}
+.about{
+  background:#fff8ed;
+  border:1px solid rgba(119,78,47,.14);
+  border-radius:18px;
+  box-shadow:0 7px 24px rgba(59,37,23,.08);
+}
+.contact{background:linear-gradient(130deg,#34241b,#4c3325);}
+footer{background:#241812;}
+@media(max-width:600px){
+  section{padding:38px 15px;}
+  .grid{gap:16px;}
+  .product-photo{height:260px;}
+  .card-body{padding:17px;}
+  .card:hover{transform:none;}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .card,.btn,.card button{transition:none;}
+}
+</style>
 </head><body>
 <header><a class="brand" href="#" aria-label="CMD Woodworking home"><strong>CMD Woodworking</strong></a><nav><a href="#products">Products</a><a href="#about">About</a><a href="#contact">Contact</a></nav></header>
 
