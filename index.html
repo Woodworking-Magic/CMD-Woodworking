@@ -827,9 +827,32 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
     }
     const grid = document.getElementById('productsGrid');
     if (grid && grid.hidden) {
-      const backButtons = [...document.querySelectorAll('.back-products')];
-      const visibleBack = backButtons.find(b => b.getClientRects().length > 0);
+      // Each product category has its own back button/class.
+      // Find the button in the currently visible product detail, not only Trays.
+      const details = [...document.querySelectorAll('#products > div, #products > section, #products > article, #productsGrid ~ *')];
+      const activeDetail = details.find(el =>
+        el !== grid && !el.hidden && el.getClientRects().length > 0 &&
+        el.querySelector('button') &&
+        /all products/i.test(el.querySelector('button')?.textContent || '')
+      );
+      const activeBack = activeDetail?.querySelector('button');
+      if (activeBack) { activeBack.click(); return; }
+      // Fallback for any future product panel with a different class.
+      const backButtons = [...document.querySelectorAll('button')];
+      const visibleBack = backButtons.find(b =>
+        b.getClientRects().length > 0 &&
+        /all products/i.test(b.textContent || '') &&
+        !b.closest('[hidden]')
+      );
       if (visibleBack) { visibleBack.click(); return; }
+      // Never leave the visitor stuck on a detail page.
+      [...document.querySelectorAll('#productsGrid ~ *')].forEach(el => {
+        if (el.querySelector('button') && /all products/i.test(el.querySelector('button')?.textContent || '')) el.hidden = true;
+      });
+      grid.hidden = false;
+      history.replaceState(null, '', '#products');
+      grid.scrollIntoView({behavior:'smooth'});
+      return;
     }
     if (window.location.hash && window.location.hash !== '#products') {
       window.location.hash = 'products';
