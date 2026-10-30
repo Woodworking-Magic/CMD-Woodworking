@@ -469,4 +469,49 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
   original.addEventListener('click', function () { button.click(); });
 })();
 </script>
+
+<style>
+/* Mobile-only navigation button */
+#cmdMobileBack {
+  display:none;
+}
+@media (max-width: 767px) {
+  #cmdMobileBack {
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    position:fixed; left:14px; bottom:calc(18px + env(safe-area-inset-bottom));
+    z-index:2147483646; padding:12px 19px;
+    border:2px solid #f0d7b4; border-radius:30px;
+    background:#56331f; color:#fff; font:bold 16px Arial,sans-serif;
+    box-shadow:0 3px 12px #0005; cursor:pointer;
+  }
+  #cmdMobileBack:active { background:#78472c; }
+}
+</style>
+<button type="button" id="cmdMobileBack" aria-label="Go back">← Back</button>
+<script>
+(function(){
+  const button = document.getElementById('cmdMobileBack');
+  button.addEventListener('click', function(){
+    const gallery = document.getElementById('productLightbox');
+    if (gallery && gallery.classList.contains('open')) {
+      gallery.querySelector('.gallery-close').click();
+      return;
+    }
+    const openDialog = document.querySelector('dialog[open], [role="dialog"]:not(#productLightbox)');
+    if (openDialog) {
+      const close = openDialog.querySelector('[aria-label*="Close"], .close, .gallery-close');
+      if (close) { close.click(); return; }
+    }
+    if (window.location.hash && window.location.hash !== '#products') {
+      window.location.hash = 'products';
+      return;
+    }
+    if (window.scrollY > 300) {
+      document.getElementById('products').scrollIntoView({behavior:'smooth'});
+      return;
+    }
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
 </body></html>
