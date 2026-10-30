@@ -104,6 +104,126 @@ footer{background:#241812;}
   .card,.btn,.card button{transition:none;}
 }
 </style>
+
+<style id="cmd-rustic-modern-combined">
+/* Rustic & Modern: warm timber textures, upscale clean product gallery. */
+:root{--brown:#261a14;--gold:#d4a45f;--cream:#faf6ef;}
+body{
+  background:
+    repeating-linear-gradient(90deg,transparent 0 125px,rgba(102,65,37,.025) 126px 128px,transparent 129px 250px),
+    linear-gradient(180deg,#f5eee4 0%,#e9d9c7 55%,#f8f1e8 100%);
+  color:#33271e;
+}
+body > header{
+  position:relative;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 5px,rgba(255,255,255,.018) 6px,transparent 7px 12px),
+    linear-gradient(110deg,#20150f,#4c3021 58%,#2d1d15);
+  border-bottom:3px solid #c99a58;
+  box-shadow:0 8px 22px rgba(35,22,13,.23);
+}
+body > header .brand strong{letter-spacing:.5px;color:#fff7e9;}
+body > header nav a{
+  color:#f9f1e5;
+  padding:8px 0;
+  border-bottom:2px solid transparent;
+}
+body > header nav a:hover,
+body > header nav a:focus-visible{border-bottom-color:#d4a45f;color:#ffda9c;}
+body > .hero{
+  background:
+    linear-gradient(110deg,rgba(23,14,9,.82),rgba(54,34,22,.75)),
+    repeating-linear-gradient(2deg,#6c4930 0px,#6c4930 10px,#79543a 11px,#79543a 14px,#513522 15px,#513522 24px);
+  border-bottom:7px solid #bc8e55;
+  box-shadow:inset 0 -12px 25px rgba(0,0,0,.16);
+}
+.hero-logo{
+  border:4px solid rgba(226,185,121,.76);
+  box-shadow:0 14px 34px rgba(0,0,0,.35);
+}
+.hero .made-in-usa-line{color:#f4ddbc;letter-spacing:.35px;}
+#products{padding-top:52px;padding-bottom:65px;}
+#products > h2{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(29px,3.6vw,42px);
+  font-weight:700;
+  color:#342318;
+}
+#products > .intro{font-size:16px;color:#715742;max-width:730px;}
+.featured-products-banner{
+  background:#fffaf3;
+  border:1px solid #dec8ad;
+  border-radius:17px;
+  box-shadow:0 10px 32px rgba(61,36,20,.12);
+  padding:16px!important;
+  margin:20px auto 35px!important;
+}
+.featured-products-banner img{
+  border-radius:10px!important;
+  box-shadow:0 4px 14px rgba(40,25,16,.13);
+}
+.featured-products-banner h3{
+  font-family:Georgia,'Times New Roman',serif;
+  color:#3c281a;
+  font-size:clamp(23px,3vw,32px)!important;
+  letter-spacing:.3px;
+}
+#products .grid{gap:28px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));}
+#products .card{
+  background:#fffdfa;
+  border:1px solid #e3d2bc;
+  border-radius:15px;
+  box-shadow:0 8px 25px rgba(57,35,20,.13);
+  overflow:hidden;
+}
+#products .card:hover{box-shadow:0 16px 34px rgba(57,35,20,.20);}
+#products .product-photo{
+  height:320px;
+  background:linear-gradient(135deg,#f7f1e9,#e9ded1);
+  border-bottom:3px solid #caa574;
+}
+#products [data-beauty-tray] .product-photo{background:#000;}
+#products .card-body{padding:22px 22px 24px;}
+#products .card h3{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:22px;
+  color:#352217;
+}
+#products .card p{color:#6b5949;}
+#products .btn,#products .card button{
+  background:linear-gradient(120deg,#b88443,#d6ab70);
+  color:#281b12;
+  border:1px solid #ad7b3f;
+  border-radius:7px;
+  font-weight:700;
+  box-shadow:0 3px 8px rgba(64,37,16,.13);
+}
+#about{padding-top:45px;padding-bottom:55px;}
+#about h2{font-family:Georgia,'Times New Roman',serif;}
+.about{
+  background:#fffaf2;
+  border:1px solid #dfc6a6;
+  border-left:6px solid #b8884f;
+  border-radius:10px;
+  box-shadow:0 8px 22px rgba(51,31,19,.10);
+}
+.contact{
+  background:
+    linear-gradient(130deg,rgba(32,21,14,.96),rgba(76,48,31,.96)),
+    repeating-linear-gradient(0deg,#65442c 0 9px,#513723 10px 17px);
+  border-top:5px solid #c69a5c;
+}
+.contact h2{color:#fff2df;font-family:Georgia,'Times New Roman',serif;}
+footer{background:#20150f;}
+@media(max-width:600px){
+  #products{padding-top:35px;padding-bottom:40px;}
+  .featured-products-banner{padding:10px!important;margin:15px auto 25px!important;}
+  #products .grid{grid-template-columns:1fr;gap:20px;}
+  #products .product-photo{height:285px;}
+  #products .card-body{padding:18px;}
+  body > header nav a{padding:5px 0;}
+}
+</style>
 </head><body>
 <header><a class="brand" href="#" aria-label="CMD Woodworking home"><strong>CMD Woodworking</strong></a><nav><a href="#products">Products</a><a href="#about">About</a><a href="#contact">Contact</a></nav></header>
 
