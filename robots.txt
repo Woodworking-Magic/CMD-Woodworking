@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://woodworking-magic.github.io/CMD-Woodworking/sitemap.xml
