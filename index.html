@@ -314,6 +314,15 @@ footer{background:#21160f;}
 }
 @media(prefers-reduced-motion:reduce){#products .card{transition:none;}}
 </style>
+<style id="cmd-custom-woodworking-swipe-css">
+#custom-woodworking-category .custom-woodworking-swipe{max-width:850px;margin:0 auto 24px;touch-action:pan-y;text-align:center;}
+#custom-woodworking-category .custom-swipe-image{display:block;width:100%;height:clamp(280px,55vw,550px);object-fit:contain;background:#f6efe6;border-radius:12px;cursor:zoom-in;}
+#custom-woodworking-category .custom-swipe-controls{display:flex;justify-content:center;align-items:center;gap:22px;margin:14px 0 4px;}
+#custom-woodworking-category .custom-swipe-controls[hidden],#custom-woodworking-category .custom-swipe-hint[hidden]{display:none;}
+#custom-woodworking-category .custom-swipe-controls button{border:0;border-radius:8px;background:#43352a;color:#fff;padding:10px 18px;font-size:20px;cursor:pointer;}
+#custom-woodworking-category .custom-swipe-counter{min-width:62px;font-weight:700;}
+#custom-woodworking-category .custom-swipe-hint{font-size:13px;color:#6d5a49;margin:10px auto;}
+</style>
 </head><body>
 <header><a class="brand" href="#" aria-label="CMD Woodworking home"><strong>CMD Woodworking</strong></a><nav><a href="#products">Products</a><a href="#about">About</a><a href="#contact">Contact</a></nav></header>
 
@@ -891,7 +900,48 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
   detail.id='custom-woodworking-category';
   detail.hidden=true;
   detail.innerHTML='<button type="button" class="btn back-custom-woodworking" style="margin:0 0 18px">← All Products</button><h2 style="margin:0 0 22px">Custom Woodworking</h2><div class="grid"></div>';
+  // Use the same swipe-gallery pattern as the other product categories.
+  const photos=[...original.querySelectorAll('.product-photo img')].map(img=>img.src);
+  original.querySelectorAll('.product-photo').forEach(el=>el.remove());
+  const gallery=document.createElement('div');
+  gallery.className='laser-swipe-gallery custom-woodworking-swipe';
+  gallery.innerHTML=`
+    <img class="custom-swipe-image" alt="Custom Woodworking photo" loading="lazy">
+    <div class="laser-swipe-controls custom-swipe-controls">
+      <button type="button" class="custom-swipe-prev" aria-label="Previous Custom Woodworking photo">❮</button>
+      <span class="laser-swipe-counter custom-swipe-counter" aria-live="polite"></span>
+      <button type="button" class="custom-swipe-next" aria-label="Next Custom Woodworking photo">❯</button>
+    </div>
+    <div class="laser-swipe-hint custom-swipe-hint">Swipe to see more photos</div>`;
+  detail.insertBefore(gallery,detail.querySelector('.grid'));
+  const display=gallery.querySelector('.custom-swipe-image');
+  const controls=gallery.querySelector('.custom-swipe-controls');
+  const hint=gallery.querySelector('.custom-swipe-hint');
+  const counter=gallery.querySelector('.custom-swipe-counter');
+  let index=0,startX=null;
+  function showPhoto(){
+    if(!photos.length)return;
+    display.src=photos[index];
+    display.alt='Custom Woodworking photo '+(index+1)+' of '+photos.length;
+    counter.textContent=(index+1)+' / '+photos.length;
+    controls.hidden=photos.length<2;
+    hint.hidden=photos.length<2;
+  }
+  function movePhoto(step){index=(index+step+photos.length)%photos.length;showPhoto();}
+  gallery.querySelector('.custom-swipe-prev').addEventListener('click',()=>movePhoto(-1));
+  gallery.querySelector('.custom-swipe-next').addEventListener('click',()=>movePhoto(1));
+  gallery.addEventListener('touchstart',e=>{startX=e.touches[0].clientX},{passive:true});
+  gallery.addEventListener('touchend',e=>{
+    if(startX===null)return;
+    const dx=e.changedTouches[0].clientX-startX;
+    if(Math.abs(dx)>40&&photos.length>1)movePhoto(dx<0?1:-1);
+    startX=null;
+  },{passive:true});
+  display.addEventListener('click',()=>document.dispatchEvent(
+    new CustomEvent('cmd-open-product-gallery',{detail:{title:'Custom Woodworking',photos,index}})
+  ));
   detail.querySelector('.grid').appendChild(original);
+  showPhoto();
   grid.appendChild(category);
   grid.parentElement.appendChild(detail);
   function open(){
