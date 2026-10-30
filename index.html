@@ -866,4 +866,53 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
   });
 })();
 </script>
+
+<script id="cmd-custom-woodworking-category">
+(function(){
+  const grid=document.getElementById('productsGrid');
+  if(!grid || document.getElementById('custom-woodworking-category'))return;
+  const original=[...grid.querySelectorAll('.card')].find(card=>
+    card.querySelector('h3')?.textContent.trim()==='Custom Woodworking'
+  );
+  if(!original)return;
+  const photo=original.querySelector('.product-photo img');
+  const category=document.createElement('article');
+  category.className='card category-card custom-woodworking-cover';
+  category.innerHTML=`
+    <div class="product-photo" role="button" tabindex="0" aria-label="View Custom Woodworking">
+      ${photo ? `<img src="${photo.src}" alt="Custom Woodworking by CMD Woodworking" loading="lazy">` : '<div class="photo">🔨</div>'}
+    </div>
+    <div class="card-body">
+      <h3>Custom Woodworking</h3>
+      <p>Have an idea? Ask us about a custom-made piece.</p>
+      <button type="button" class="btn open-custom-woodworking">View Custom Woodworking</button>
+    </div>`;
+  const detail=document.createElement('div');
+  detail.id='custom-woodworking-category';
+  detail.hidden=true;
+  detail.innerHTML='<button type="button" class="btn back-custom-woodworking" style="margin:0 0 18px">← All Products</button><h2 style="margin:0 0 22px">Custom Woodworking</h2><div class="grid"></div>';
+  detail.querySelector('.grid').appendChild(original);
+  grid.appendChild(category);
+  grid.parentElement.appendChild(detail);
+  function open(){
+    grid.hidden=true;
+    detail.hidden=false;
+    history.replaceState(null,'','#custom-woodworking');
+    detail.scrollIntoView({behavior:'smooth'});
+  }
+  function close(){
+    detail.hidden=true;
+    grid.hidden=false;
+    history.replaceState(null,'','#products');
+    grid.scrollIntoView({behavior:'smooth'});
+  }
+  category.querySelector('button').addEventListener('click',open);
+  category.querySelector('.product-photo').addEventListener('click',open);
+  category.querySelector('.product-photo').addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}
+  });
+  detail.querySelector('.back-custom-woodworking').addEventListener('click',close);
+  if(location.hash==='#custom-woodworking')open();
+})();
+</script>
 </body></html>
