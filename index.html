@@ -897,6 +897,29 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
   #cmdMobileBack.cmd-back-active { display:flex; }
   #cmdMobileBack:active { background:#78472c; }
 }
+  /* Desktop navigation: keep the existing mobile Back behavior and make it visible on PCs. */
+  @media (min-width: 768px) {
+    #cmdMobileBack {
+      display:none;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      position:fixed;
+      left:24px;
+      top:100px;
+      z-index:2147483646;
+      padding:12px 19px;
+      border:2px solid #f0d7b4;
+      border-radius:30px;
+      background:#56331f;
+      color:#fff;
+      font:bold 16px Arial,sans-serif;
+      box-shadow:0 3px 12px #0005;
+      cursor:pointer;
+    }
+    #cmdMobileBack.cmd-back-active { display:flex; }
+    #cmdMobileBack:hover { background:#78472c; }
+  }
 </style>
 <button type="button" id="cmdMobileBack" aria-label="Go back">← Back</button>
 <script>
